@@ -1,0 +1,9 @@
+---
+apt_cacher_ng__packages: "{{ apt_cacher_ng__default_packages }}"
+apt_cacher_ng__state: "present"
+apt_cacher_ng__cache_dir: "{{ apt_cacher_ng__default_cache_dir }}"
+apt_cacher_ng__user: "{{ apt_cacher_ng__default_user }}"
+apt_cacher_ng__config_file: "{{ apt_cacher_ng__default_config_file }}"
+apt_cacher_ng__port: "3142"
+apt_cacher_ng__files_remove: "{{ apt_cacher_ng__default_files_remove }}"
+apt_cacher_ng__service: "{{ apt_cacher_ng__default_service }}"

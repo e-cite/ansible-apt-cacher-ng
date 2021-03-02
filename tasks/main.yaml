@@ -1,0 +1,51 @@
+---
+- name: Include OS vars
+  include_vars:
+    "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yaml"
+
+- name: Install package "{{ apt_cacher_ng__packages }}"
+  ansible.builtin.package:
+    name: "{{ apt_cacher_ng__packages }}"
+    state: "{{ apt_cacher_ng__state }}"
+
+- name: Create CacheDir
+  ansible.builtin.file:
+    path: "{{ apt_cacher_ng__cache_dir }}"
+    owner: "{{ apt_cacher_ng__user }}"
+    group: "{{ apt_cacher_ng__user }}"
+    mode: 02755
+    state:
+      "{{ 'directory' if apt_cacher_ng__state == 'present' else 'absent' }}"
+
+- name: Set config "{{ apt_cacher_ng__config_file }}"
+  ansible.builtin.template:
+    src: acng.conf.j2
+    dest: "{{ apt_cacher_ng__config_file }}"
+  notify:
+    - restart apt-cacher-ng
+
+- name: Remove config "{{ apt_cacher_ng__config_file }}"
+  ansible.builtin.file:
+    path: "{{ apt_cacher_ng__config_file }}"
+    state: absent
+  when:
+    apt_cacher_ng__state != "present"
+
+- name: Remove files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    "{{ apt_cacher_ng__files_remove }}"
+  notify:
+    - restart apt-cacher-ng
+  when:
+    apt_cacher_ng__state == "present"
+
+- name: Enable service "{{ apt_cacher_ng__service }}" on boot
+  ansible.builtin.service:
+    name: "{{ apt_cacher_ng__service }}"
+    state:
+      "{{ 'started' if apt_cacher_ng__state == 'present' else 'stopped' }}"
+    enabled:
+      "{{ 'true' if apt_cacher_ng__state == 'present' else 'false' }}"

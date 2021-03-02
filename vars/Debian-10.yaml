@@ -1,0 +1,8 @@
+---
+apt_cacher_ng__default_packages: "apt-cacher-ng"
+apt_cacher_ng__default_cache_dir: "/var/cache/apt-cacher-ng"
+apt_cacher_ng__default_user: "apt-cacher-ng"
+apt_cacher_ng__default_config_file: "/etc/apt-cacher-ng/acng.conf"
+apt_cacher_ng__default_files_remove:
+  - "/etc/apt-cacher-ng/zz_debconf.conf"
+apt_cacher_ng__default_service: "apt-cacher-ng"
